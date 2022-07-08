@@ -1,45 +1,83 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class AssetsApp extends StatelessWidget {
+void main() => runApp(BodyListView());
+
+class BodyListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        fontFamily: "IndieFlower",
-      ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Adding assets"),
+          centerTitle: true,
+          title: Text("Building List View"),
         ),
-        body: Center(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image(image: AssetImage("assets/images/015 bg.jpg")),
-              Image.asset('assets/icons/015 icon.png'),
-              Positioned(
-                top: 16,
-                left: 100,
-                child: Text("IndieFlower-Regular",
-                style: TextStyle(
-                  // fontFamily: "IndieFlower",
-                  fontSize: 30,
-                  color: Colors.green,
-                ),
-
-              ),),
-            ],
-          ),
-        ),
+        body: _myListView(),
       ),
     );
   }
 }
 
-void main() => runApp(AssetsApp());
+Widget _myListView() {
+  final List<ListItem> items = List<ListItem>.generate(
+      10000,
+      (int index) => index % 6 == 0
+          ? HeadingItem('Heading $index')
+          : MessageItem('Sender $index', "Message body"));
+
+  return ListView.builder(
+    itemCount: items.length,
+    itemBuilder: (BuildContext context, int index) {
+      final item = items[index];
+      if (item is HeadingItem) {
+        return ListTile(
+          title:
+              Text(item.heading, style: Theme.of(context).textTheme.headline6),
+        );
+      } else if (item is MessageItem) {
+        return ListTile(
+          title: Text(
+            item.sender,
+          ),
+          subtitle: Text(item.body),
+          leading: Icon(
+            Icons.insert_photo,
+            color: Colors.red,
+          ),
+          trailing: Icon(Icons.keyboard_arrow_right),
+        );
+      }
+      return ListTile(
+        title: Text(
+          "null",
+        ),
+      );
+      // return Card(
+      //   child: ListTile(
+      //     title: Text("${items[index]}"),
+      //     leading: Icon(
+      //       Icons.insert_photo,
+      //       color: Colors.red,
+      //     ),
+      //     trailing: Icon(Icons.keyboard_arrow_right),
+      //   ),
+    },
+  );
+}
+
+abstract class ListItem {}
+
+class HeadingItem implements ListItem {
+  final String heading;
+
+  HeadingItem(this.heading);
+}
+
+class MessageItem implements ListItem {
+  final String sender;
+  final String body;
+
+  MessageItem(this.sender, this.body);
+}
