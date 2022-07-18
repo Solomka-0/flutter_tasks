@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: BlocProvider(
-        create: (_) => ColorBloc(),
+        create: (context) => ColorBloc(),
         child: MyHomePage(),
       ),
     );
@@ -32,7 +32,7 @@ class MyHomePage extends StatelessWidget {
             height: 100,
             width: 100,
             color: currentColor,
-            duration: Duration(microseconds: 500),
+            duration: Duration(milliseconds: 500),
           ),
         ),
       ),
@@ -40,12 +40,14 @@ class MyHomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => context.read<ColorBloc>().add(ColorEvent.event_red),
+            onPressed: () {
+              _bloc.addState(ColorEvent.event_red);
+            },
             backgroundColor: Colors.red,
           ),
           SizedBox(width: 20),
           FloatingActionButton(
-            onPressed: () => context.read<ColorBloc>().add(ColorEvent.event_green),
+            onPressed: () => _bloc.addState(ColorEvent.event_green),
             backgroundColor: Colors.green,
           ),
         ],
