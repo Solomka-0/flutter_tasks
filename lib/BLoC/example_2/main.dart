@@ -40,14 +40,12 @@ class MyHomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => context.read<ColorBloc>().mapEventToState(ColorEvent.event_red),
+            onPressed: () => context.read<ColorBloc>().add(ColorEvent.event_red),
             backgroundColor: Colors.red,
           ),
           SizedBox(width: 20),
           FloatingActionButton(
-            onPressed: () {
-              context.read<ColorBloc>().stream.length.then((value) => print);
-            },
+            onPressed: () => context.read<ColorBloc>().add(ColorEvent.event_green),
             backgroundColor: Colors.green,
           ),
         ],
